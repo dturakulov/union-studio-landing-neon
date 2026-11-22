@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CONTENT, InsightItem, Lang, WorkItem } from "@/lib/i18n";
 import { Navbar } from "@/components/sections/Navbar";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -41,6 +41,8 @@ export function LandingApp() {
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
+
+  const handleCloseDrawer = useCallback(() => setDrawerOpen(false), []);
 
   const openBooking = (opts?: { service?: string; backdrop?: string }) => {
     setPreselectedService(opts?.service);
@@ -106,7 +108,7 @@ export function LandingApp() {
 
       <NavigationDrawer
         open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={handleCloseDrawer}
         content={content}
         lang={lang}
         onLangChange={setLang}

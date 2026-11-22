@@ -222,6 +222,12 @@ dialog.cine-modal.cine-modal-wide {
   display: none;
 }
 
+@property --drawer-backdrop {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @supports (animation-timeline: scroll()) {
   .Drawer {
     timeline-scope: --drawer-fade;
@@ -231,12 +237,6 @@ dialog.cine-modal.cine-modal-wide {
 
   .Drawer-scroller {
     scroll-timeline: --drawer-fade x;
-  }
-
-  @property --drawer-backdrop {
-    syntax: "<number>";
-    inherits: true;
-    initial-value: 0;
   }
 
   @keyframes fade-drawer-backdrop {

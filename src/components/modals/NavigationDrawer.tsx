@@ -24,15 +24,61 @@ export function NavigationDrawer({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLElement>(null);
+  const onCloseRef = useRef(onClose);
+  const hasOpenedRef = useRef(false);
   const isClosingRef = useRef(false);
+  const closeFallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  const finishClose = useCallback(() => {
+    if (closeFallbackTimerRef.current) {
+      clearTimeout(closeFallbackTimerRef.current);
+      closeFallbackTimerRef.current = null;
+    }
+    const dialog = dialogRef.current;
+    hasOpenedRef.current = false;
+    isClosingRef.current = false;
+    if (dialog?.open) {
+      dialog.close();
+    }
+    onCloseRef.current();
+  }, []);
 
   const slideOutAndClose = useCallback(() => {
     const scroller = scrollerRef.current;
     const dialog = dialogRef.current;
+    const sheet = sheetRef.current;
     if (!dialog || !dialog.open || !scroller || isClosingRef.current) return;
+
     isClosingRef.current = true;
+
+    const alreadyOffscreen =
+      sheet && scroller.scrollLeft >= sheet.offsetWidth - 2;
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    if (alreadyOffscreen || prefersReduced) {
+      finishClose();
+      return;
+    }
+
     scroller.scrollTo({ left: scroller.offsetWidth, behavior: "auto" });
-  }, []);
+
+    if (closeFallbackTimerRef.current) {
+      clearTimeout(closeFallbackTimerRef.current);
+    }
+    closeFallbackTimerRef.current = setTimeout(() => {
+      if (isClosingRef.current && dialog.open) {
+        finishClose();
+      }
+    }, 450);
+  }, [finishClose]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -45,15 +91,31 @@ export function NavigationDrawer({
       (entries) => {
         const entry = entries[entries.length - 1];
         if (!entry) return;
-        if (entry.intersectionRatio < visibleThreshold && dialog.open) {
-          dialog.close();
-          isClosingRef.current = false;
-          onClose();
+        if (entry.intersectionRatio >= visibleThreshold) {
+          hasOpenedRef.current = true;
+        }
+        if (
+          entry.intersectionRatio < visibleThreshold &&
+          dialog.open &&
+          (hasOpenedRef.current || isClosingRef.current)
+        ) {
+          finishClose();
         }
       },
-      { root: dialog, threshold: [visibleThreshold, 1] },
+      { root: dialog, threshold: [visibleThreshold, 0.5, 1] },
     );
     observer.observe(sheet);
+
+    const handleNativeClose = () => {
+      hasOpenedRef.current = false;
+      isClosingRef.current = false;
+      if (closeFallbackTimerRef.current) {
+        clearTimeout(closeFallbackTimerRef.current);
+        closeFallbackTimerRef.current = null;
+      }
+      onCloseRef.current();
+    };
+    dialog.addEventListener("close", handleNativeClose);
 
     let detachScrollFallback: (() => void) | undefined;
     if (
@@ -72,9 +134,13 @@ export function NavigationDrawer({
 
     return () => {
       observer.disconnect();
+      dialog.removeEventListener("close", handleNativeClose);
       detachScrollFallback?.();
+      if (closeFallbackTimerRef.current) {
+        clearTimeout(closeFallbackTimerRef.current);
+      }
     };
-  }, [onClose]);
+  }, [finishClose]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -84,8 +150,10 @@ export function NavigationDrawer({
     let cancelled = false;
     const runOpen = async () => {
       if (open && !dialog.open) {
+        hasOpenedRef.current = false;
         isClosingRef.current = false;
         dialog.showModal();
+
         if (
           typeof CSS !== "undefined" &&
           !CSS.supports("scroll-initial-target", "nearest")
@@ -94,8 +162,13 @@ export function NavigationDrawer({
           await new Promise<void>((resolve) =>
             requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
           );
+        } else {
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => resolve()),
+          );
         }
-        if (!cancelled) {
+
+        if (!cancelled && dialog.open) {
           scroller.scrollTo({ left: 0, behavior: "auto" });
         }
       } else if (!open && dialog.open) {
@@ -118,7 +191,7 @@ export function NavigationDrawer({
       e.preventDefault();
       slideOutAndClose();
     } else {
-      onClose();
+      finishClose();
     }
   };
 
@@ -160,7 +233,7 @@ export function NavigationDrawer({
             </button>
           </div>
 
-          <div className="flex flex-col justify-between py-8 gap-8">
+          <div className="flex flex-col justify-between gap-8 py-8">
             <ul className="space-y-3">
               {content.nav.items.map((item, idx) => (
                 <li key={item.href}>
@@ -208,7 +281,7 @@ export function NavigationDrawer({
                 type="button"
                 onClick={() => {
                   slideOutAndClose();
-                  setTimeout(onOpenBooking, 180);
+                  setTimeout(onOpenBooking, 220);
                 }}
                 className="flex w-full items-center justify-center gap-2 rounded-full bg-[#ec521b] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:bg-[#d84310] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white cursor-pointer"
               >
