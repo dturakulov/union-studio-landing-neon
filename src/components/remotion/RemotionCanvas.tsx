@@ -17,7 +17,10 @@ interface RemotionCanvasProps<TProps extends Record<string, unknown>> {
   fps?: number;
   initialFrame?: number;
   className?: string;
+  fit?: "contain" | "cover";
   showPauseControl?: boolean;
+  externalPaused?: boolean;
+  pauseButtonClassName?: string;
   pauseLabel?: string;
   playLabel?: string;
   controls?: boolean;
@@ -35,7 +38,10 @@ export function RemotionCanvas<TProps extends Record<string, unknown>>({
   fps = 30,
   initialFrame = 0,
   className = "",
+  fit = "contain",
   showPauseControl = false,
+  externalPaused,
+  pauseButtonClassName = "absolute bottom-4 right-4 z-30",
   pauseLabel = "Pause animation",
   playLabel = "Play animation",
   controls = false,
@@ -83,7 +89,12 @@ export function RemotionCanvas<TProps extends Record<string, unknown>>({
     return () => observer.disconnect();
   }, []);
 
-  const shouldPlay = autoPlay && isVisible && !userPaused && !reducedMotion;
+  const effectivePaused = externalPaused ?? userPaused;
+  const shouldPlay =
+    autoPlay &&
+    isVisible &&
+    !effectivePaused &&
+    (!reducedMotion || externalPaused === false);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -112,40 +123,63 @@ export function RemotionCanvas<TProps extends Record<string, unknown>>({
     }
   };
 
+  const isCover = fit === "cover";
+
+  const playerNode = mounted ? (
+    <Player
+      ref={playerRef}
+      component={component}
+      inputProps={inputProps}
+      durationInFrames={durationInFrames}
+      compositionWidth={compositionWidth}
+      compositionHeight={compositionHeight}
+      fps={fps}
+      initialFrame={initialFrame}
+      autoPlay={shouldPlay}
+      loop={loop}
+      controls={controls}
+      clickToPlay={false}
+      acknowledgeRemotionLicense
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "block",
+      }}
+    />
+  ) : (
+    <div
+      aria-hidden="true"
+      className="h-full w-full bg-[radial-gradient(circle_at_50%_40%,rgba(236,82,27,0.28),#0a0a0a_75%)]"
+    />
+  );
+
   return (
     <div
       ref={containerRef}
       className={`relative overflow-hidden bg-[#0a0a0a] ${className}`}
-      style={{ aspectRatio: `${compositionWidth} / ${compositionHeight}` }}
+      style={
+        isCover
+          ? { containerType: "size" }
+          : { aspectRatio: `${compositionWidth} / ${compositionHeight}` }
+      }
       role={ariaLabel ? "region" : undefined}
       aria-label={ariaLabel}
     >
-      {mounted ? (
-        <Player
-          ref={playerRef}
-          component={component}
-          inputProps={inputProps}
-          durationInFrames={durationInFrames}
-          compositionWidth={compositionWidth}
-          compositionHeight={compositionHeight}
-          fps={fps}
-          initialFrame={initialFrame}
-          autoPlay={shouldPlay}
-          loop={loop}
-          controls={controls}
-          clickToPlay={false}
-          acknowledgeRemotionLicense
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "block",
-          }}
-        />
-      ) : (
+      {isCover ? (
         <div
-          aria-hidden="true"
-          className="h-full w-full bg-[radial-gradient(circle_at_50%_40%,rgba(236,82,27,0.28),#0a0a0a_75%)]"
-        />
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: `max(100cqw, calc(100cqh * ${compositionWidth} / ${compositionHeight}))`,
+            height: `max(100cqh, calc(100cqw * ${compositionHeight} / ${compositionWidth}))`,
+          }}
+        >
+          {playerNode}
+        </div>
+      ) : (
+        playerNode
       )}
 
       {showPauseControl && mounted && (
@@ -153,7 +187,7 @@ export function RemotionCanvas<TProps extends Record<string, unknown>>({
           type="button"
           onClick={togglePlayback}
           aria-label={shouldPlay ? pauseLabel : playLabel}
-          className="absolute bottom-14 right-4 z-30 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-[#0a0a0a]/85 text-white backdrop-blur-sm transition duration-150 hover:border-[#ec521b] hover:bg-[#ec521b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white cursor-pointer sm:bottom-12"
+          className={`${pauseButtonClassName} inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-[#0a0a0a]/85 text-white backdrop-blur-sm transition duration-150 hover:border-[#ec521b] hover:bg-[#ec521b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white cursor-pointer`}
         >
           {shouldPlay ? (
             <Pause className="h-4 w-4" aria-hidden="true" />

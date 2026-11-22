@@ -80,7 +80,7 @@ export function Navbar({
           <button
             type="button"
             onClick={onOpenBooking}
-            className="hidden rounded-full bg-[#ec521b] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:bg-[#d84310] active:scale-[0.98] sm:inline-flex cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#ec521b] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:bg-[#d84310] active:scale-[0.98] sm:inline-flex cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             {content.nav.bookBtn}
           </button>

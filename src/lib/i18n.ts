@@ -143,6 +143,7 @@ export interface LocaleContent {
     catalogToggleOpen: string;
     catalogToggleClose: string;
     allCountBadge: string;
+    allFilterLabel: string;
     featuredSets: BackdropSetItem[];
     categories: BackdropCategoryGroup[];
   };
@@ -506,6 +507,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       catalogToggleOpen: "Barcha 30+ fon ro'yxatini ochish",
       catalogToggleClose: "Ro'yxatni yopish",
       allCountBadge: "32 TA FAOL LOKATSIYA VA FON",
+      allFilterLabel: "Hammasi (32)",
       featuredSets: [
         {
           number: "01",
@@ -1089,6 +1091,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       catalogToggleOpen: "Открыть весь каталог 30+ фонов",
       catalogToggleClose: "Скрыть каталог",
       allCountBadge: "32 АКТИВНЫХ ФОНА И ЛОКАЦИИ",
+      allFilterLabel: "Все (32)",
       featuredSets: [
         {
           number: "01",

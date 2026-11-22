@@ -22,7 +22,7 @@ export function SelectedWorkSection({
   return (
     <section
       id="work"
-      className="bg-[#fdf6e9] py-20 text-[#111111] sm:py-28"
+      className="bg-[#fdf6e9] py-14 text-[#111111] sm:py-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
         {/* Centered Header with Tilted Orange Pill */}
@@ -185,9 +185,9 @@ function WorkPosterCard({
         <button
           type="button"
           onClick={onSelect}
-          className="absolute inset-0 z-20 flex items-end justify-between bg-gradient-to-t from-black/75 via-transparent to-transparent p-5 text-left opacity-0 transition duration-200 group-hover:opacity-100 focus-visible:opacity-100 cursor-pointer"
+          className="absolute inset-0 z-20 flex items-end justify-between bg-gradient-to-t from-black/75 via-transparent to-transparent p-4 text-left opacity-100 transition duration-200 sm:p-5 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100 cursor-pointer"
         >
-          <span className="inline-flex items-center gap-2 rounded-full bg-[#ec521b] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white">
+          <span className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-[#ec521b] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white shadow-lg">
             <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
             {watchLabel}
           </span>
@@ -195,7 +195,7 @@ function WorkPosterCard({
 
         {sticker && (
           <div
-            className={`pointer-events-none absolute right-4 top-16 z-20 flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#111111] p-2 text-center text-[10px] font-extrabold uppercase leading-tight tracking-wider text-[#111111] shadow-md -rotate-6 ${
+            className={`pointer-events-none absolute right-3 top-14 z-20 flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#111111] p-2 text-center text-[9px] font-extrabold uppercase leading-tight tracking-wider text-[#111111] shadow-md -rotate-6 sm:right-4 sm:top-16 sm:h-24 sm:w-24 sm:text-[10px] ${
               sticker.tone === "sky" ? "bg-[#7ecbf2]" : "bg-[#f2b749]"
             }`}
           >

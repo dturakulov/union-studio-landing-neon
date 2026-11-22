@@ -99,13 +99,13 @@ export function RemotionLightboxDialog({
       aria-labelledby={titleId}
       {...({ closedby: "any" } as Record<string, string>)}
     >
-      <div className="flex items-center justify-between gap-4 border-b border-white/15 bg-[#0a0a0a] px-6 py-4">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ec521b] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white">
+      <div className="flex items-start justify-between gap-3 border-b border-white/15 bg-[#0a0a0a] px-4 py-4 sm:items-center sm:px-6">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#ec521b] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white sm:text-[11px]">
             <Film className="h-3.5 w-3.5" aria-hidden="true" />
             {content.lightboxModal.badge}
           </span>
-          <h2 id={titleId} className="font-display-cine text-2xl text-white">
+          <h2 id={titleId} className="font-display-cine text-xl text-white sm:text-2xl">
             {title}
           </h2>
         </div>
@@ -114,14 +114,14 @@ export function RemotionLightboxDialog({
           autoFocus
           onClick={() => dialogRef.current?.close()}
           aria-label={content.lightboxModal.closeLabel}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-white transition duration-150 hover:border-[#ec521b] hover:bg-[#ec521b] cursor-pointer"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 text-white transition duration-150 hover:border-[#ec521b] hover:bg-[#ec521b] cursor-pointer"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
 
       {target && (
-        <div className="grid gap-6 overflow-y-auto p-6 lg:grid-cols-[1.25fr_0.9fr]">
+        <div className="grid gap-5 overflow-y-auto p-4 sm:gap-6 sm:p-6 lg:grid-cols-[1.25fr_0.9fr]">
           <div className="overflow-hidden rounded-2xl border border-white/15 bg-[#0a0a0a]">
             {target.kind === "showreel" ? (
               <RemotionCanvas
@@ -140,7 +140,7 @@ export function RemotionLightboxDialog({
                 className="w-full"
               />
             ) : (
-              <div className="mx-auto max-w-[380px]">
+              <div className="mx-auto max-w-[300px] sm:max-w-[380px]">
                 <RemotionCanvas
                   component={ReelShowcaseComposition}
                   inputProps={{

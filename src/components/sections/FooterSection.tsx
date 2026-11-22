@@ -24,7 +24,7 @@ export function FooterSection({ content, onOpenBooking }: FooterSectionProps) {
   return (
     <footer
       id="contact"
-      className="grain-surface bg-[#0a0a0a] pt-20 text-white"
+      className="grain-surface bg-[#0a0a0a] pt-14 text-white sm:pt-20"
     >
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-8">
         {/* Top 2-Column Split */}
@@ -154,7 +154,7 @@ export function FooterSection({ content, onOpenBooking }: FooterSectionProps) {
         </div>
 
         {/* Bottom Legal Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 py-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#b5b0a8]">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-24 pt-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#b5b0a8] lg:pb-6">
           <span>{content.footer.legal}</span>
           <span>{content.brand.tagline}</span>
         </div>

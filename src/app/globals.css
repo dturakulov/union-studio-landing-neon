@@ -284,3 +284,11 @@ dialog.cine-modal.cine-modal-wide {
   border: 0 !important;
   white-space: nowrap !important;
 }
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

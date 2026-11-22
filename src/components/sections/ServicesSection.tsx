@@ -18,15 +18,15 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="bg-[#7ecbf2] py-20 text-[#111111] sm:py-28"
+      className="bg-[#7ecbf2] py-14 text-[#111111] sm:py-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
-        <div className="grid items-end gap-8 border-b border-black/20 pb-12 lg:grid-cols-[1.2fr_1fr_auto]">
+        <div className="grid items-end gap-6 border-b border-black/20 pb-10 lg:grid-cols-[1.2fr_1fr_auto] lg:gap-8 lg:pb-12">
           <div>
             <span className="editorial-pill mb-3 text-xl">
               {content.services.pill}
             </span>
-            <h2 className="font-display-cine text-[clamp(2.8rem,6vw,5.2rem)] text-[#111111]">
+            <h2 className="font-display-cine text-[clamp(2.5rem,6vw,5.2rem)] text-[#111111]">
               {content.services.title}
             </h2>
           </div>
@@ -39,7 +39,7 @@ export function ServicesSection({
             <button
               type="button"
               onClick={() => onBookService(content.bookingModal.serviceOptions[0])}
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-[#111111] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.12em] text-[#111111] transition duration-150 hover:bg-[#111111] hover:text-white cursor-pointer"
+              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg border-2 border-[#111111] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.12em] text-[#111111] transition duration-150 hover:bg-[#111111] hover:text-white sm:w-auto cursor-pointer"
             >
               {content.services.viewAllCta}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -47,13 +47,13 @@ export function ServicesSection({
           </div>
         </div>
 
-        <div className="divide-y divide-black/20">
+        <div className="grid gap-5 pt-8 lg:block lg:divide-y lg:divide-black/20 lg:pt-0">
           {content.services.items.map((service, idx) => (
             <div
               key={service.index}
-              className="grid items-center gap-8 py-10 lg:grid-cols-[0.4fr_1.1fr_1.05fr]"
+              className="grid items-center gap-6 rounded-2xl border-2 border-[#111111] bg-[#96d7f7]/80 p-4 sm:p-6 lg:grid-cols-[0.4fr_1.1fr_1.05fr] lg:gap-8 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:py-10"
             >
-              <div className="font-display-cine text-[clamp(3.6rem,6vw,5.4rem)] leading-none text-[#111111]">
+              <div className="font-display-cine text-[clamp(3rem,6vw,5.4rem)] leading-none text-[#111111]">
                 {service.index}
               </div>
 
@@ -84,7 +84,7 @@ export function ServicesSection({
                         content.bookingModal.serviceOptions[0],
                     )
                   }
-                  className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-5 py-2.5 text-xs font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:bg-[#ec521b] cursor-pointer"
+                  className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#111111] px-5 py-2.5 text-xs font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:bg-[#ec521b] sm:w-auto cursor-pointer"
                 >
                   {service.ctaLabel}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

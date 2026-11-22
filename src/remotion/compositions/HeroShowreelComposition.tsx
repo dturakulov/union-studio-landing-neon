@@ -17,6 +17,7 @@ export interface HeroScene {
 export interface HeroShowreelProps extends Record<string, unknown> {
   scenes: HeroScene[];
   studioBadge: string;
+  showEmbeddedHud?: boolean;
 }
 
 export const HERO_DEFAULT_SCENES: HeroScene[] = [
@@ -49,6 +50,7 @@ export const HERO_DEFAULT_SCENES: HeroScene[] = [
 export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
   scenes,
   studioBadge,
+  showEmbeddedHud = true,
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
@@ -181,135 +183,139 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
       </AbsoluteFill>
 
       {/* Subtle Cinema HUD Top Bar */}
-      <div
-        style={{
-          position: "absolute",
-          top: 96,
-          left: 64,
-          right: 64,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontFamily: REMOTION_FONTS.sans,
-          color: "rgba(255,255,255,0.82)",
-          fontSize: 18,
-          letterSpacing: "0.14em",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "6px 14px",
-              borderRadius: 999,
-              backgroundColor: "rgba(10,10,10,0.68)",
-              border: "1px solid rgba(255,255,255,0.18)",
-              fontSize: 15,
-              fontWeight: 700,
-            }}
-          >
-            <span
-              style={{
-                width: 9,
-                height: 9,
-                borderRadius: "50%",
-                backgroundColor: REMOTION_COLORS.orange,
-                opacity: recPulse,
-              }}
-            />
-            REC · {studioBadge}
-          </span>
-          <span
-            style={{
-              padding: "6px 14px",
-              borderRadius: 999,
-              backgroundColor: "rgba(236, 82, 27, 0.22)",
-              border: "1px solid rgba(236, 82, 27, 0.55)",
-              color: REMOTION_COLORS.white,
-              fontSize: 14,
-              fontWeight: 600,
-            }}
-          >
-            {activeScenes[currentIdx].label}
-          </span>
-        </div>
-
+      {showEmbeddedHud && (
         <div
           style={{
-            fontFamily: "monospace",
+            position: "absolute",
+            top: 96,
+            left: 64,
+            right: 64,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            fontFamily: REMOTION_FONTS.sans,
+            color: "rgba(255,255,255,0.82)",
             fontSize: 18,
-            letterSpacing: "0.18em",
-            padding: "6px 14px",
-            borderRadius: 999,
-            backgroundColor: "rgba(10,10,10,0.62)",
-            border: "1px solid rgba(255,255,255,0.14)",
+            letterSpacing: "0.14em",
           }}
         >
-          {formatTimecode(frame, fps)}
-        </div>
-      </div>
-
-      {/* Scene Progress Bars */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 34,
-          left: 64,
-          right: 64,
-          display: "grid",
-          gridTemplateColumns: `repeat(${activeScenes.length}, 1fr)`,
-          gap: 12,
-        }}
-      >
-        {activeScenes.map((scene, idx) => {
-          const fillRatio =
-            idx < currentIdx
-              ? 1
-              : idx > currentIdx
-                ? 0
-                : Math.min(1, localFrame / sceneSpan);
-          return (
-            <div
-              key={scene.tag + idx}
-              style={{ display: "flex", flexDirection: "column", gap: 6 }}
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 14px",
+                borderRadius: 999,
+                backgroundColor: "rgba(10,10,10,0.68)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                fontSize: 15,
+                fontWeight: 700,
+              }}
             >
               <span
                 style={{
-                  fontFamily: REMOTION_FONTS.sans,
-                  fontSize: 13,
-                  letterSpacing: "0.14em",
-                  color:
-                    idx === currentIdx
-                      ? REMOTION_COLORS.white
-                      : "rgba(255,255,255,0.48)",
-                  fontWeight: idx === currentIdx ? 700 : 500,
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  backgroundColor: REMOTION_COLORS.orange,
+                  opacity: recPulse,
                 }}
-              >
-                {scene.tag}
-              </span>
+              />
+              REC · {studioBadge}
+            </span>
+            <span
+              style={{
+                padding: "6px 14px",
+                borderRadius: 999,
+                backgroundColor: "rgba(236, 82, 27, 0.22)",
+                border: "1px solid rgba(236, 82, 27, 0.55)",
+                color: REMOTION_COLORS.white,
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              {activeScenes[currentIdx].label}
+            </span>
+          </div>
+
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 18,
+              letterSpacing: "0.18em",
+              padding: "6px 14px",
+              borderRadius: 999,
+              backgroundColor: "rgba(10,10,10,0.62)",
+              border: "1px solid rgba(255,255,255,0.14)",
+            }}
+          >
+            {formatTimecode(frame, fps)}
+          </div>
+        </div>
+      )}
+
+      {/* Scene Progress Bars */}
+      {showEmbeddedHud && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 34,
+            left: 64,
+            right: 64,
+            display: "grid",
+            gridTemplateColumns: `repeat(${activeScenes.length}, 1fr)`,
+            gap: 12,
+          }}
+        >
+          {activeScenes.map((scene, idx) => {
+            const fillRatio =
+              idx < currentIdx
+                ? 1
+                : idx > currentIdx
+                  ? 0
+                  : Math.min(1, localFrame / sceneSpan);
+            return (
               <div
-                style={{
-                  height: 3,
-                  width: "100%",
-                  backgroundColor: "rgba(255,255,255,0.2)",
-                  borderRadius: 999,
-                  overflow: "hidden",
-                }}
+                key={scene.tag + idx}
+                style={{ display: "flex", flexDirection: "column", gap: 6 }}
               >
+                <span
+                  style={{
+                    fontFamily: REMOTION_FONTS.sans,
+                    fontSize: 13,
+                    letterSpacing: "0.14em",
+                    color:
+                      idx === currentIdx
+                        ? REMOTION_COLORS.white
+                        : "rgba(255,255,255,0.48)",
+                    fontWeight: idx === currentIdx ? 700 : 500,
+                  }}
+                >
+                  {scene.tag}
+                </span>
                 <div
                   style={{
-                    height: "100%",
-                    width: `${fillRatio * 100}%`,
-                    backgroundColor: REMOTION_COLORS.orange,
+                    height: 3,
+                    width: "100%",
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    borderRadius: 999,
+                    overflow: "hidden",
                   }}
-                />
+                >
+                  <div
+                    style={{
+                      height: "100%",
+                      width: `${fillRatio * 100}%`,
+                      backgroundColor: REMOTION_COLORS.orange,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </AbsoluteFill>
   );
 };

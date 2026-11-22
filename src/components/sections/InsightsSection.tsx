@@ -28,15 +28,15 @@ export function InsightsSection({
   return (
     <section
       id="insights"
-      className="border-t border-black/15 bg-[#fdf6e9] py-20 text-[#111111] sm:py-28"
+      className="border-t border-black/15 bg-[#fdf6e9] py-14 text-[#111111] sm:py-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
-        <div className="flex flex-col justify-between gap-6 border-b border-dashed border-black/25 pb-10 lg:flex-row lg:items-end">
+        <div className="flex flex-col justify-between gap-6 border-b border-dashed border-black/25 pb-8 lg:flex-row lg:items-end lg:pb-10">
           <div>
             <span className="editorial-pill mb-3 text-xl">
               {content.insights.pill}
             </span>
-            <h2 className="font-display-cine text-[clamp(2.8rem,5.5vw,4.8rem)] text-[#111111]">
+            <h2 className="font-display-cine text-[clamp(2.5rem,5.5vw,4.8rem)] text-[#111111]">
               {content.insights.title}
             </h2>
           </div>
@@ -45,7 +45,7 @@ export function InsightsSection({
             <p className="max-w-sm text-sm text-[#4a4a4a]">
               {content.insights.subtitle}
             </p>
-            <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-3 md:flex">
               <button
                 type="button"
                 onClick={prev}
@@ -66,11 +66,11 @@ export function InsightsSection({
           </div>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="scrollbar-none -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 md:mx-0 md:mt-10 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
           {visibleItems.map((article) => (
             <article
               key={article.id}
-              className="group flex flex-col justify-between rounded-2xl border border-dashed border-black/25 bg-[#f4ead6] p-5 transition duration-150 hover:border-[#ec521b]"
+              className="group flex w-[84vw] max-w-[330px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-dashed border-black/25 bg-[#f4ead6] p-5 transition duration-150 hover:border-[#ec521b] md:w-auto md:max-w-none"
             >
               <div>
                 <div className="aspect-[16/10] overflow-hidden rounded-xl bg-black">

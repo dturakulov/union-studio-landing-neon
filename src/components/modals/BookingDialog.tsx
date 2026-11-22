@@ -387,7 +387,7 @@ export function BookingDialog({
                   placeholder={modalCopy.namePlaceholder}
                   aria-describedby="booking-name-hint"
                   data-error="booking-name-error"
-                  className="cine-input w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-[#ec521b] focus:outline-none"
+                  className="cine-input w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-base text-white placeholder:text-white/35 focus:border-[#ec521b] focus:outline-none sm:text-sm"
                 />
                 <div id="booking-name-error" className="field-error-msg">
                   <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -420,7 +420,7 @@ export function BookingDialog({
                   placeholder={modalCopy.phonePlaceholder}
                   aria-describedby="booking-phone-hint"
                   data-error="booking-phone-error"
-                  className="cine-input w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-[#ec521b] focus:outline-none"
+                  className="cine-input w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-base text-white placeholder:text-white/35 focus:border-[#ec521b] focus:outline-none sm:text-sm"
                 />
                 <div id="booking-phone-error" className="field-error-msg">
                   <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -444,7 +444,7 @@ export function BookingDialog({
                   id="booking-service"
                   value={service}
                   onChange={(e) => setServiceOverride(e.target.value)}
-                  className="w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-sm text-white focus:border-[#ec521b] focus:outline-none"
+                  className="w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-base text-white focus:border-[#ec521b] focus:outline-none sm:text-sm"
                 >
                   {modalCopy.serviceOptions.map((opt) => (
                     <option key={opt} value={opt}>
@@ -468,7 +468,7 @@ export function BookingDialog({
                   id="booking-backdrop"
                   value={backdrop}
                   onChange={(e) => setBackdropOverride(e.target.value)}
-                  className="w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-sm text-white focus:border-[#ec521b] focus:outline-none"
+                  className="w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-base text-white focus:border-[#ec521b] focus:outline-none sm:text-sm"
                 >
                   {modalCopy.backdropOptions.map((opt) => (
                     <option key={opt} value={opt}>
@@ -492,7 +492,7 @@ export function BookingDialog({
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder={modalCopy.notesPlaceholder}
-                className="mt-1.5 w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-[#ec521b] focus:outline-none"
+                className="mt-1.5 w-full rounded-xl border border-white/20 bg-[#0a0a0a] px-4 py-3 text-base text-white placeholder:text-white/35 focus:border-[#ec521b] focus:outline-none sm:text-sm"
               />
             </div>
 

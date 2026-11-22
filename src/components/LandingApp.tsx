@@ -12,6 +12,7 @@ import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { BackdropsSpotlightSection } from "@/components/sections/BackdropsSpotlightSection";
 import { InsightsSection } from "@/components/sections/InsightsSection";
 import { FooterSection } from "@/components/sections/FooterSection";
+import { MobileActionBar } from "@/components/sections/MobileActionBar";
 import { NavigationDrawer } from "@/components/modals/NavigationDrawer";
 import { BookingDialog } from "@/components/modals/BookingDialog";
 import {
@@ -95,6 +96,11 @@ export function LandingApp() {
 
       <FooterSection
         content={content}
+        onOpenBooking={() => openBooking()}
+      />
+
+      <MobileActionBar
+        lang={lang}
         onOpenBooking={() => openBooking()}
       />
 

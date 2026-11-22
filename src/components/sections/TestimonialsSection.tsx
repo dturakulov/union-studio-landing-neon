@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { LocaleContent } from "@/lib/i18n";
 
 export function TestimonialsSection({ content }: { content: LocaleContent }) {
   const items = content.testimonials.items;
   const [activeIndex, setActiveIndex] = useState(1);
+  const touchStartX = useRef<number | null>(null);
 
   const prev = () => setActiveIndex((i) => (i - 1 + items.length) % items.length);
   const next = () => setActiveIndex((i) => (i + 1) % items.length);
@@ -17,10 +18,24 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
     (activeIndex + 1) % items.length,
   ];
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
+    const delta = endX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) next();
+    else prev();
+  };
+
   return (
     <section
       id="testimonials"
-      className="grain-surface bg-[#0a0a0a] py-20 text-white sm:py-28"
+      className="grain-surface bg-[#0a0a0a] py-14 text-white sm:py-24"
     >
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
@@ -29,50 +44,63 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
               {content.testimonials.pill}
             </span>
           </div>
-          <h2 className="font-display-cine text-[clamp(2.8rem,6vw,5rem)] text-white">
+          <h2 className="font-display-cine text-[clamp(2.5rem,6vw,5rem)] text-white">
             {content.testimonials.title}
           </h2>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+        <div
+          className="mt-10 grid gap-6 lg:mt-14 lg:grid-cols-3"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {visibleIndices.map((itemIdx, slot) => {
             const item = items[itemIdx];
             const isCenter = slot === 1;
             return (
               <article
                 key={`${item.id}-${slot}`}
-                className={`grid gap-5 rounded-2xl border p-6 transition duration-200 sm:grid-cols-[1.25fr_0.85fr] ${
+                className={`${
+                  isCenter ? "grid" : "hidden lg:grid"
+                } gap-5 rounded-2xl border p-5 transition duration-200 sm:grid-cols-[1.25fr_0.85fr] sm:p-6 ${
                   isCenter
                     ? "border-[#ec521b] bg-[#ec521b] text-white shadow-[0_24px_60px_rgba(236,82,27,0.3)]"
                     : "border-white/15 bg-[#141414] text-white/90"
                 }`}
               >
-                <div className="flex flex-col justify-between gap-6">
-                  <p className="text-sm leading-relaxed">
+                <div className="flex flex-col justify-between gap-5">
+                  <p className="text-sm leading-relaxed sm:text-base lg:text-sm">
                     “{item.quote}”
                   </p>
-                  <div>
-                    <div
-                      className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
-                        isCenter ? "text-white/85" : "text-[#ec521b]"
-                      }`}
-                    >
-                      {item.roleTitle}
-                    </div>
-                    <div className="mt-1 font-display-cine text-2xl text-white">
-                      {item.author}
-                    </div>
-                    <div
-                      className={`text-xs ${
-                        isCenter ? "text-white/85" : "text-[#b5b0a8]"
-                      }`}
-                    >
-                      {item.company}
+                  <div className="flex items-center gap-3 sm:block">
+                    <img
+                      src={item.avatarUrl}
+                      alt={item.author}
+                      className="h-12 w-12 shrink-0 rounded-full border border-black/25 object-cover grayscale contrast-125 sm:hidden"
+                    />
+                    <div>
+                      <div
+                        className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                          isCenter ? "text-white/85" : "text-[#ec521b]"
+                        }`}
+                      >
+                        {item.roleTitle}
+                      </div>
+                      <div className="mt-1 font-display-cine text-2xl text-white">
+                        {item.author}
+                      </div>
+                      <div
+                        className={`text-xs ${
+                          isCenter ? "text-white/85" : "text-[#b5b0a8]"
+                        }`}
+                      >
+                        {item.company}
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="overflow-hidden rounded-xl border border-black/20 bg-black/20">
+                <div className="hidden overflow-hidden rounded-xl border border-black/20 bg-black/20 sm:block">
                   <img
                     src={item.avatarUrl}
                     alt={item.author}
@@ -84,7 +112,7 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
           })}
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-4">
+        <div className="mt-8 flex items-center justify-center gap-4 sm:mt-10">
           <button
             type="button"
             onClick={prev}
