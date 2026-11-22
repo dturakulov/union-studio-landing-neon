@@ -1,0 +1,34 @@
+{
+  "name": "union-studio-remotion",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "remotion:studio": "remotion studio src/remotion/index.ts",
+    "remotion:compositions": "remotion compositions src/remotion/index.ts",
+    "remotion:render:hero": "remotion render src/remotion/index.ts HeroShowreel out/hero-showreel.mp4",
+    "remotion:render:reel": "remotion render src/remotion/index.ts ReelShowcase out/reel-showcase.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.545",
+    "@remotion/player": "4.0.545",
+    "lucide-react": "^1.77.0",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.545"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+:root {
+  --bg-obsidian: #0a0a0a;
+  --surface-obsidian: #141414;
+  --surface-obsidian-2: #1c1c1c;
+  --bg-cream: #fdf6e9;
+  --surface-cream: #f4ead6;
+  --bg-sky: #7ecbf2;
+  --surface-sky: #6cbde8;
+  --accent-orange: #ec521b;
+  --accent-orange-hover: #d84310;
+  --accent-orange-soft: #f05a24;
+  --sticker-pink: #f6b8d0;
+  --sticker-gold: #f2b749;
+  --sticker-sky: #7ecbf2;
+  --ink-dark: #111111;
+  --ink-muted: #4a4a4a;
+  --ink-light: #ffffff;
+  --ink-light-muted: #b5b0a8;
+  --line-dark: rgba(255, 255, 255, 0.14);
+  --line-light: rgba(17, 17, 17, 0.16);
+}
+
+@theme inline {
+  --color-obsidian: var(--bg-obsidian);
+  --color-cream: var(--bg-cream);
+  --color-sky-stage: var(--bg-sky);
+  --color-cine-orange: var(--accent-orange);
+  --color-sticker-pink: var(--sticker-pink);
+  --color-sticker-gold: var(--sticker-gold);
+  --font-display: var(--font-sofia-condensed), "Arial Narrow", sans-serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-obsidian);
+    color: var(--ink-light);
+    overflow-x: clip;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-obsidian);
+    color: var(--ink-light);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--accent-orange);
+    color: #ffffff;
+  }
+}
+
+.font-display-cine {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.font-serif-editorial {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.grain-surface {
+  position: relative;
+}
+
+.grain-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+.editorial-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.9rem;
+  border-radius: 9999px;
+  background-color: var(--accent-orange);
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.15;
+  transform: rotate(-3.5deg);
+  box-shadow: 0 8px 24px rgba(236, 82, 27, 0.25);
+}
+
+.stamp-spin {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stamp-spin {
+    animation: stampRotate 24s linear infinite;
+  }
+}
+
+@keyframes stampRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Native <dialog> modal scroll containment & transitions */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background: rgba(6, 6, 6, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+dialog.cine-modal {
+  margin: auto;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0;
+  background: var(--surface-obsidian);
+  color: var(--ink-light);
+  max-width: min(92vw, 720px);
+  width: 100%;
+  max-height: 90svh;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+dialog.cine-modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+dialog.cine-modal.cine-modal-wide {
+  max-width: min(94vw, 1020px);
+}
+
+/* Swipeable Navigation Drawer (modern-web-guidance) */
+.Drawer {
+  --drawer-width: min(23rem, 84dvw, 100dvw - 24px);
+  --drawer-backdrop: 0;
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  overflow: visible;
+}
+
+.Drawer[open] {
+  display: block;
+}
+
+.Drawer::backdrop {
+  background: #000000;
+  opacity: calc(var(--drawer-backdrop) * 0.76);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.Drawer-scroller {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--drawer-width) 100%;
+  overflow-x: scroll;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+.Drawer-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .Drawer-scroller {
+    scroll-behavior: smooth;
+  }
+}
+
+.Drawer-scroller::after {
+  content: "";
+  scroll-snap-align: end;
+  scroll-initial-target: nearest;
+}
+
+.Drawer-sheet {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100svh;
+  background: #0e0e0e;
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  overflow-y: auto;
+  scroll-snap-align: start;
+  scrollbar-width: none;
+}
+
+.Drawer-sheet::-webkit-scrollbar {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .Drawer {
+    timeline-scope: --drawer-fade;
+    animation: fade-drawer-backdrop linear both;
+    animation-timeline: --drawer-fade;
+  }
+
+  .Drawer-scroller {
+    scroll-timeline: --drawer-fade x;
+  }
+
+  @property --drawer-backdrop {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @keyframes fade-drawer-backdrop {
+    0% {
+      --drawer-backdrop: 1;
+    }
+    100% {
+      --drawer-backdrop: 0;
+    }
+  }
+}
+
+/* Form Validation (:user-invalid + fallback + accessible error banner) */
+.field-error-msg {
+  display: none;
+  color: #ff8f6b;
+  font-size: 0.8125rem;
+  margin-top: 0.35rem;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cine-input:is(:user-invalid, .user-invalid-fallback) {
+  border-color: var(--accent-orange) !important;
+  background-color: rgba(236, 82, 27, 0.12) !important;
+}
+
+.cine-input:is(:user-invalid, .user-invalid-fallback) + .field-error-msg {
+  display: flex;
+}
+
+.cine-input:user-valid,
+.cine-input.user-valid-fallback {
+  border-color: #34d399 !important;
+}
+
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}

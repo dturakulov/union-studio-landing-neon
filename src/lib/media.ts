@@ -1,0 +1,31 @@
+const unsplash = (id: string, w = 1200, h?: number) =>
+  `https://images.unsplash.com/photo-${id}?w=${w}${h ? `&h=${h}` : ""}&fit=crop&q=80&auto=format`;
+
+export const media = {
+  studioWide: unsplash("1598653222000-6b7b7a552625", 1400),
+  studioMic: unsplash("1598488035139-bdbb2231ce04", 1200),
+  cameraRig: unsplash("1516035069371-29a1b244cc32", 1400),
+  podcastMic: unsplash("1589903308904-1010c2294adc", 1200),
+  podcastRoom: unsplash("1478737270239-2f02b77fc618", 1400),
+  podcastTwo: unsplash("1590602847861-f357a9332bbc", 1200),
+  editingDesk: unsplash("1574717024653-61fd2cf4d44d", 1400),
+  editingSuite: unsplash("1574717025058-2f8737d2e2b7", 1200),
+  colorGrading: unsplash("1535016120720-40c646be5580", 1200),
+  reelsNeon: unsplash("1611532736597-de2d4265fba3", 1200),
+  socialFlow: unsplash("1611162617213-7d7a39e9b1d7", 1200),
+  shootOne: unsplash("1581368135153-a506cf13b1e1", 1200),
+  shootTwo: unsplash("1559523161-0fc0d8b38a7a", 1200),
+  shootThree: unsplash("1571330735066-03aaa9429d89", 1200),
+  filmCamera: unsplash("1485846234645-a62644f84728", 1400),
+  setWarm: unsplash("1508700115892-45ecd05ae2ad", 1200),
+  setDark: unsplash("1585399000684-d2f72660f092", 1200),
+  loungeSpace: unsplash("1524758631624-e2822e304c36", 1200),
+  archInterior: unsplash("1497366216548-37526070297c", 1200),
+  concreteRoom: unsplash("1497366811353-6870744d04b2", 1200),
+  meetingTeam: unsplash("1522202176988-66273c2fd55f", 1200),
+  portrait1: unsplash("1507003211169-0a1dd7228f2d", 600, 600),
+  portrait2: unsplash("1494790108377-be9c29b29330", 600, 600),
+  portrait3: unsplash("1472099645785-5658abf4ff4e", 600, 600),
+  portrait4: unsplash("1438761681033-6461ffad8d80", 600, 600),
+  portrait5: unsplash("1500648767791-00dcc994a43e", 600, 600),
+};

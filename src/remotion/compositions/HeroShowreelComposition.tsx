@@ -1,0 +1,315 @@
+import React from "react";
+import {
+  AbsoluteFill,
+  Img,
+  interpolate,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
+import { REMOTION_COLORS, REMOTION_FONTS, formatTimecode } from "../theme";
+
+export interface HeroScene {
+  label: string;
+  tag: string;
+  imageUrl: string;
+}
+
+export interface HeroShowreelProps extends Record<string, unknown> {
+  scenes: HeroScene[];
+  studioBadge: string;
+}
+
+export const HERO_DEFAULT_SCENES: HeroScene[] = [
+  {
+    label: "SET 01/30+ · CYCLORAMA",
+    tag: "SOUNDSTAGE",
+    imageUrl:
+      "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?w=1600&fit=crop&q=80&auto=format",
+  },
+  {
+    label: "SET 08/30+ · PODCAST LOUNGE",
+    tag: "PODCAST 4K",
+    imageUrl:
+      "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=1600&fit=crop&q=80&auto=format",
+  },
+  {
+    label: "SET 17/30+ · NEON REELS",
+    tag: "REELS STAGE",
+    imageUrl:
+      "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1600&fit=crop&q=80&auto=format",
+  },
+  {
+    label: "SET 24/30+ · CINEMA RIG",
+    tag: "BRAND FILM",
+    imageUrl:
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1600&fit=crop&q=80&auto=format",
+  },
+];
+
+export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
+  scenes,
+  studioBadge,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps, durationInFrames } = useVideoConfig();
+
+  const activeScenes = scenes.length > 0 ? scenes : HERO_DEFAULT_SCENES;
+  const sceneSpan = durationInFrames / activeScenes.length;
+  const currentIdx = Math.min(
+    activeScenes.length - 1,
+    Math.floor(frame / sceneSpan),
+  );
+  const localFrame = frame - currentIdx * sceneSpan;
+
+  const panX = interpolate(frame, [0, durationInFrames], [-14, 14]);
+  const jibSwing = Math.sin((frame / durationInFrames) * Math.PI * 2) * 1.4;
+  const recPulse = 0.55 + 0.45 * Math.sin(frame * 0.14);
+
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: REMOTION_COLORS.obsidian,
+        overflow: "hidden",
+      }}
+    >
+      {activeScenes.map((scene, idx) => {
+        const start = idx * sceneSpan;
+        const fadeIn = interpolate(frame, [start, start + 18], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+        const fadeOut = interpolate(
+          frame,
+          [start + sceneSpan - 18, start + sceneSpan],
+          [1, 0],
+          {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          },
+        );
+        const opacity =
+          idx === 0 && frame < 18
+            ? 1
+            : idx === activeScenes.length - 1 && frame > start + sceneSpan - 18
+              ? fadeOut
+              : Math.min(fadeIn, fadeOut);
+        const scale = interpolate(
+          frame,
+          [start, start + sceneSpan],
+          [1.04, 1.13],
+          {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          },
+        );
+
+        return (
+          <AbsoluteFill
+            key={scene.label + idx}
+            style={{
+              opacity,
+              transform: `scale(${scale}) translateX(${panX * 0.4}px)`,
+            }}
+          >
+            <Img
+              src={scene.imageUrl}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                filter: "contrast(1.08) saturate(1.15) brightness(0.76)",
+              }}
+            />
+          </AbsoluteFill>
+        );
+      })}
+
+      {/* Warm Burnt-Orange Soundstage Atmosphere */}
+      <AbsoluteFill
+        style={{
+          background:
+            "radial-gradient(circle at 56% 42%, rgba(236, 82, 27, 0.36) 0%, rgba(18, 12, 10, 0.45) 48%, rgba(10, 10, 10, 0.92) 86%)",
+        }}
+      />
+
+      {/* Cinematic Gradient Vignette for Foreground Legibility */}
+      <AbsoluteFill
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(10,10,10,0.72) 0%, rgba(10,10,10,0.18) 38%, rgba(10,10,10,0.45) 68%, rgba(10,10,10,0.95) 100%)",
+        }}
+      />
+
+      {/* Soundstage Frame & Camera Jib Silhouette SVG */}
+      <AbsoluteFill style={{ pointerEvents: "none" }}>
+        <svg
+          viewBox="0 0 1920 1080"
+          style={{ width: "100%", height: "100%" }}
+          preserveAspectRatio="xMidYMid slice"
+        >
+          {/* Top lighting truss bar */}
+          <rect x="0" y="0" width="1920" height="44" fill="#080808" />
+          <line
+            x1="0"
+            y1="44"
+            x2="1920"
+            y2="44"
+            stroke="rgba(255,255,255,0.12)"
+            strokeWidth="2"
+          />
+          {/* Left studio stand */}
+          <path
+            d="M150 920 L215 620 L248 620 L315 920 M230 620 L230 495 M185 480 L285 450 L292 520 L185 520 Z"
+            fill="#070707"
+            opacity="0.88"
+          />
+          {/* Right camera crane jib silhouette */}
+          <g
+            transform={`translate(0, ${jibSwing * 4})`}
+            opacity="0.9"
+          >
+            <path
+              d="M1920 690 L1320 430 L1312 458 L1920 742 Z"
+              fill="#070707"
+            />
+            <rect x="1285" y="420" width="68" height="42" rx="6" fill="#070707" />
+            <rect x="1262" y="478" width="106" height="84" rx="10" fill="#090909" />
+            <circle cx="1315" cy="520" r="24" fill="#171717" stroke="#ec521b" strokeWidth="3" />
+            <path d="M1670 620 L1670 1080 L1715 1080 L1715 640 Z" fill="#070707" />
+          </g>
+        </svg>
+      </AbsoluteFill>
+
+      {/* Subtle Cinema HUD Top Bar */}
+      <div
+        style={{
+          position: "absolute",
+          top: 96,
+          left: 64,
+          right: 64,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          fontFamily: REMOTION_FONTS.sans,
+          color: "rgba(255,255,255,0.82)",
+          fontSize: 18,
+          letterSpacing: "0.14em",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "6px 14px",
+              borderRadius: 999,
+              backgroundColor: "rgba(10,10,10,0.68)",
+              border: "1px solid rgba(255,255,255,0.18)",
+              fontSize: 15,
+              fontWeight: 700,
+            }}
+          >
+            <span
+              style={{
+                width: 9,
+                height: 9,
+                borderRadius: "50%",
+                backgroundColor: REMOTION_COLORS.orange,
+                opacity: recPulse,
+              }}
+            />
+            REC · {studioBadge}
+          </span>
+          <span
+            style={{
+              padding: "6px 14px",
+              borderRadius: 999,
+              backgroundColor: "rgba(236, 82, 27, 0.22)",
+              border: "1px solid rgba(236, 82, 27, 0.55)",
+              color: REMOTION_COLORS.white,
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+          >
+            {activeScenes[currentIdx].label}
+          </span>
+        </div>
+
+        <div
+          style={{
+            fontFamily: "monospace",
+            fontSize: 18,
+            letterSpacing: "0.18em",
+            padding: "6px 14px",
+            borderRadius: 999,
+            backgroundColor: "rgba(10,10,10,0.62)",
+            border: "1px solid rgba(255,255,255,0.14)",
+          }}
+        >
+          {formatTimecode(frame, fps)}
+        </div>
+      </div>
+
+      {/* Scene Progress Bars */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 34,
+          left: 64,
+          right: 64,
+          display: "grid",
+          gridTemplateColumns: `repeat(${activeScenes.length}, 1fr)`,
+          gap: 12,
+        }}
+      >
+        {activeScenes.map((scene, idx) => {
+          const fillRatio =
+            idx < currentIdx
+              ? 1
+              : idx > currentIdx
+                ? 0
+                : Math.min(1, localFrame / sceneSpan);
+          return (
+            <div
+              key={scene.tag + idx}
+              style={{ display: "flex", flexDirection: "column", gap: 6 }}
+            >
+              <span
+                style={{
+                  fontFamily: REMOTION_FONTS.sans,
+                  fontSize: 13,
+                  letterSpacing: "0.14em",
+                  color:
+                    idx === currentIdx
+                      ? REMOTION_COLORS.white
+                      : "rgba(255,255,255,0.48)",
+                  fontWeight: idx === currentIdx ? 700 : 500,
+                }}
+              >
+                {scene.tag}
+              </span>
+              <div
+                style={{
+                  height: 3,
+                  width: "100%",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  borderRadius: 999,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    width: `${fillRatio * 100}%`,
+                    backgroundColor: REMOTION_COLORS.orange,
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
