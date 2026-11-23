@@ -28,7 +28,7 @@ export function InsightsSection({
   return (
     <section
       id="insights"
-      className="border-t border-black/15 bg-[#fdf6e9] py-14 text-[#111111] sm:py-24"
+      className="lut-transition border-t border-black/15 bg-[var(--bg-cream)] py-14 text-[#111111] sm:py-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
         <div className="flex flex-col justify-between gap-6 border-b border-dashed border-black/25 pb-8 lg:flex-row lg:items-end lg:pb-10">
@@ -70,7 +70,7 @@ export function InsightsSection({
           {visibleItems.map((article) => (
             <article
               key={article.id}
-              className="group flex w-[84vw] max-w-[330px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-dashed border-black/25 bg-[#f4ead6] p-5 transition duration-150 hover:border-[#ec521b] md:w-auto md:max-w-none"
+              className="group flex w-[84vw] max-w-[330px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-dashed border-black/25 bg-[var(--surface-cream)] p-5 transition duration-150 hover:border-[var(--accent)] md:w-auto md:max-w-none"
             >
               <div>
                 <div className="aspect-[16/10] overflow-hidden rounded-xl bg-black">
@@ -80,7 +80,7 @@ export function InsightsSection({
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
                 </div>
-                <div className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-[#ec521b]">
+                <div className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--accent)]">
                   {article.readTime}
                 </div>
                 <h3 className="font-display-cine mt-2 text-2xl text-[#111111]">

@@ -20,6 +20,7 @@ interface RemotionCanvasProps<TProps extends Record<string, unknown>> {
   fit?: "contain" | "cover";
   showPauseControl?: boolean;
   externalPaused?: boolean;
+  seekRequest?: { frame: number; nonce: number } | null;
   pauseButtonClassName?: string;
   pauseLabel?: string;
   playLabel?: string;
@@ -41,6 +42,7 @@ export function RemotionCanvas<TProps extends Record<string, unknown>>({
   fit = "contain",
   showPauseControl = false,
   externalPaused,
+  seekRequest,
   pauseButtonClassName = "absolute bottom-4 right-4 z-30",
   pauseLabel = "Pause animation",
   playLabel = "Play animation",
@@ -105,6 +107,12 @@ export function RemotionCanvas<TProps extends Record<string, unknown>>({
       player.pause();
     }
   }, [shouldPlay, mounted]);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player || !mounted || !seekRequest) return;
+    player.seekTo(seekRequest.frame);
+  }, [seekRequest, mounted]);
 
   const togglePlayback = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();

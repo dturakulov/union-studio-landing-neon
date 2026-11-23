@@ -45,9 +45,10 @@ export default function RootLayout({
   return (
     <html
       lang="uz"
+      data-lut="editorial"
       className={`${sofiaCondensed.variable} ${cormorant.variable} ${manrope.variable}`}
     >
-      <body className="antialiased selection:bg-[#ec521b] selection:text-white">
+      <body className="antialiased">
         {children}
       </body>
     </html>

@@ -3,6 +3,7 @@ import {
   AbsoluteFill,
   Img,
   interpolate,
+  spring,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -18,6 +19,8 @@ export interface HeroShowreelProps extends Record<string, unknown> {
   scenes: HeroScene[];
   studioBadge: string;
   showEmbeddedHud?: boolean;
+  accentColor?: string;
+  framingMode?: "backdrop" | "cinema";
 }
 
 export const HERO_DEFAULT_SCENES: HeroScene[] = [
@@ -51,6 +54,8 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
   scenes,
   studioBadge,
   showEmbeddedHud = true,
+  accentColor = REMOTION_COLORS.orange,
+  framingMode = "backdrop",
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
@@ -67,6 +72,22 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
   const jibSwing = Math.sin((frame / durationInFrames) * Math.PI * 2) * 1.4;
   const recPulse = 0.55 + 0.45 * Math.sin(frame * 0.14);
 
+  const wipeSpring = spring({
+    frame: localFrame,
+    fps,
+    config: { damping: 28, stiffness: 115 },
+  });
+  const flareX = interpolate(localFrame, [0, 26], [-25, 125], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const flareOpacity = interpolate(localFrame, [0, 10, 26], [0, 0.42, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  const isCinema = framingMode === "cinema";
+
   return (
     <AbsoluteFill
       style={{
@@ -76,41 +97,34 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
     >
       {activeScenes.map((scene, idx) => {
         const start = idx * sceneSpan;
-        const fadeIn = interpolate(frame, [start, start + 18], [0, 1], {
-          extrapolateLeft: "clamp",
-          extrapolateRight: "clamp",
-        });
-        const fadeOut = interpolate(
-          frame,
-          [start + sceneSpan - 18, start + sceneSpan],
-          [1, 0],
-          {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          },
-        );
-        const opacity =
-          idx === 0 && frame < 18
-            ? 1
-            : idx === activeScenes.length - 1 && frame > start + sceneSpan - 18
-              ? fadeOut
-              : Math.min(fadeIn, fadeOut);
+        const isCurrent = idx === currentIdx;
+        const isPrev = idx === currentIdx - 1;
+
+        if (!isCurrent && !isPrev) {
+          return null;
+        }
+
         const scale = interpolate(
           frame,
           [start, start + sceneSpan],
-          [1.04, 1.13],
+          [1.02, 1.09],
           {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
           },
         );
 
+        const revealPct =
+          isCurrent && idx > 0 ? Math.max(0, (1 - wipeSpring) * 100) : 0;
+
         return (
           <AbsoluteFill
             key={scene.label + idx}
             style={{
-              opacity,
-              transform: `scale(${scale}) translateX(${panX * 0.4}px)`,
+              zIndex: isCurrent ? 2 : 1,
+              clipPath:
+                revealPct > 0 ? `inset(0% ${revealPct}% 0% 0%)` : undefined,
+              transform: `scale(${scale}) translateX(${panX * 0.35}px)`,
             }}
           >
             <Img
@@ -119,70 +133,168 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                filter: "contrast(1.08) saturate(1.15) brightness(0.76)",
+                filter: isCinema
+                  ? "contrast(1.08) saturate(1.14) brightness(0.92)"
+                  : "contrast(1.08) saturate(1.12) brightness(0.84)",
               }}
             />
           </AbsoluteFill>
         );
       })}
 
-      {/* Warm Burnt-Orange Soundstage Atmosphere */}
+      {/* Passing Anamorphic Light Flare on Scene Cut */}
+      {currentIdx > 0 && flareOpacity > 0.01 && (
+        <AbsoluteFill
+          style={{
+            zIndex: 3,
+            pointerEvents: "none",
+            opacity: flareOpacity,
+            background: `linear-gradient(90deg, transparent ${flareX - 16}%, ${accentColor}55 ${flareX}%, transparent ${flareX + 16}%)`,
+          }}
+        />
+      )}
+
+      {/* Crisp Studio Vignette (Zero Muddy Brown Wash) */}
       <AbsoluteFill
         style={{
-          background:
-            "radial-gradient(circle at 56% 42%, rgba(236, 82, 27, 0.36) 0%, rgba(18, 12, 10, 0.45) 48%, rgba(10, 10, 10, 0.92) 86%)",
+          zIndex: 4,
+          background: isCinema
+            ? "linear-gradient(180deg, rgba(7,7,9,0.52) 0%, rgba(7,7,9,0.06) 35%, rgba(7,7,9,0.12) 65%, rgba(7,7,9,0.82) 100%)"
+            : "linear-gradient(90deg, rgba(7,7,9,0.88) 0%, rgba(7,7,9,0.48) 46%, rgba(7,7,9,0.72) 100%), linear-gradient(180deg, rgba(7,7,9,0.68) 0%, rgba(7,7,9,0.12) 40%, rgba(7,7,9,0.92) 100%)",
         }}
       />
 
-      {/* Cinematic Gradient Vignette for Foreground Legibility */}
-      <AbsoluteFill
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(10,10,10,0.72) 0%, rgba(10,10,10,0.18) 38%, rgba(10,10,10,0.45) 68%, rgba(10,10,10,0.95) 100%)",
-        }}
-      />
+      {/* Backdrop Soundstage Jib Silhouette (Desktop Backdrop Only) */}
+      {!isCinema && (
+        <AbsoluteFill style={{ zIndex: 5, pointerEvents: "none" }}>
+          <svg
+            viewBox="0 0 1920 1080"
+            style={{ width: "100%", height: "100%" }}
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <rect x="0" y="0" width="1920" height="44" fill="#070709" />
+            <line
+              x1="0"
+              y1="44"
+              x2="1920"
+              y2="44"
+              stroke="rgba(255,255,255,0.12)"
+              strokeWidth="2"
+            />
+            <path
+              d="M150 920 L215 620 L248 620 L315 920 M230 620 L230 495 M185 480 L285 450 L292 520 L185 520 Z"
+              fill="#070709"
+              opacity="0.72"
+            />
+            <g transform={`translate(0, ${jibSwing * 4})`} opacity="0.78">
+              <path
+                d="M1920 690 L1320 430 L1312 458 L1920 742 Z"
+                fill="#070709"
+              />
+              <rect
+                x="1285"
+                y="420"
+                width="68"
+                height="42"
+                rx="6"
+                fill="#070709"
+              />
+              <rect
+                x="1262"
+                y="478"
+                width="106"
+                height="84"
+                rx="10"
+                fill="#09090b"
+              />
+              <circle
+                cx="1315"
+                cy="520"
+                r="24"
+                fill="#17171c"
+                stroke={accentColor}
+                strokeWidth="3"
+              />
+              <path
+                d="M1670 620 L1670 1080 L1715 1080 L1715 640 Z"
+                fill="#070709"
+              />
+            </g>
+          </svg>
+        </AbsoluteFill>
+      )}
 
-      {/* Soundstage Frame & Camera Jib Silhouette SVG */}
-      <AbsoluteFill style={{ pointerEvents: "none" }}>
-        <svg
-          viewBox="0 0 1920 1080"
-          style={{ width: "100%", height: "100%" }}
-          preserveAspectRatio="xMidYMid slice"
-        >
-          {/* Top lighting truss bar */}
-          <rect x="0" y="0" width="1920" height="44" fill="#080808" />
-          <line
-            x1="0"
-            y1="44"
-            x2="1920"
-            y2="44"
-            stroke="rgba(255,255,255,0.12)"
-            strokeWidth="2"
-          />
-          {/* Left studio stand */}
-          <path
-            d="M150 920 L215 620 L248 620 L315 920 M230 620 L230 495 M185 480 L285 450 L292 520 L185 520 Z"
-            fill="#070707"
-            opacity="0.88"
-          />
-          {/* Right camera crane jib silhouette */}
-          <g
-            transform={`translate(0, ${jibSwing * 4})`}
-            opacity="0.9"
+      {/* Mobile Cinema Viewfinder Brackets & Live Scene Tag */}
+      {isCinema && (
+        <AbsoluteFill style={{ zIndex: 5, pointerEvents: "none" }}>
+          <svg
+            viewBox="0 0 1920 1080"
+            style={{ width: "100%", height: "100%" }}
+            preserveAspectRatio="none"
           >
             <path
-              d="M1920 690 L1320 430 L1312 458 L1920 742 Z"
-              fill="#070707"
+              d="M 56 118 L 56 56 L 128 56 M 1792 56 L 1864 56 L 1864 118 M 56 962 L 56 1024 L 128 1024 M 1792 1024 L 1864 1024 L 1864 962"
+              fill="none"
+              stroke="rgba(255,255,255,0.45)"
+              strokeWidth="4"
             />
-            <rect x="1285" y="420" width="68" height="42" rx="6" fill="#070707" />
-            <rect x="1262" y="478" width="106" height="84" rx="10" fill="#090909" />
-            <circle cx="1315" cy="520" r="24" fill="#171717" stroke="#ec521b" strokeWidth="3" />
-            <path d="M1670 620 L1670 1080 L1715 1080 L1715 640 Z" fill="#070707" />
-          </g>
-        </svg>
-      </AbsoluteFill>
+          </svg>
 
-      {/* Subtle Cinema HUD Top Bar */}
+          <div
+            style={{
+              position: "absolute",
+              top: 52,
+              left: 72,
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              padding: "10px 22px",
+              borderRadius: 999,
+              backgroundColor: "rgba(7,7,9,0.72)",
+              border: `2px solid ${accentColor}`,
+              color: REMOTION_COLORS.white,
+              fontFamily: REMOTION_FONTS.sans,
+              fontSize: 26,
+              fontWeight: 800,
+              letterSpacing: "0.1em",
+            }}
+          >
+            <span
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                backgroundColor: accentColor,
+                opacity: recPulse,
+              }}
+            />
+            {activeScenes[currentIdx].label}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              bottom: 52,
+              left: 72,
+              right: 72,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              fontFamily: "monospace",
+              fontSize: 26,
+              color: REMOTION_COLORS.white,
+              letterSpacing: "0.16em",
+            }}
+          >
+            <span style={{ fontWeight: 700 }}>
+              0{currentIdx + 1} · {activeScenes[currentIdx].tag}
+            </span>
+            <span style={{ opacity: 0.85 }}>{formatTimecode(frame, fps)}</span>
+          </div>
+        </AbsoluteFill>
+      )}
+
+      {/* Embedded Cinema HUD Top Bar (Used in Remotion Studio / CLI / Lightbox) */}
       {showEmbeddedHud && (
         <div
           style={{
@@ -190,11 +302,12 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
             top: 96,
             left: 64,
             right: 64,
+            zIndex: 6,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             fontFamily: REMOTION_FONTS.sans,
-            color: "rgba(255,255,255,0.82)",
+            color: "rgba(255,255,255,0.88)",
             fontSize: 18,
             letterSpacing: "0.14em",
           }}
@@ -218,7 +331,7 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
                   width: 9,
                   height: 9,
                   borderRadius: "50%",
-                  backgroundColor: REMOTION_COLORS.orange,
+                  backgroundColor: accentColor,
                   opacity: recPulse,
                 }}
               />
@@ -228,8 +341,8 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
               style={{
                 padding: "6px 14px",
                 borderRadius: 999,
-                backgroundColor: "rgba(236, 82, 27, 0.22)",
-                border: "1px solid rgba(236, 82, 27, 0.55)",
+                backgroundColor: "rgba(7, 7, 9, 0.72)",
+                border: `1px solid ${accentColor}`,
                 color: REMOTION_COLORS.white,
                 fontSize: 14,
                 fontWeight: 600,
@@ -255,7 +368,7 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
         </div>
       )}
 
-      {/* Scene Progress Bars */}
+      {/* Embedded Scene Progress Bars (Used in Remotion Studio / CLI / Lightbox) */}
       {showEmbeddedHud && (
         <div
           style={{
@@ -263,6 +376,7 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
             bottom: 34,
             left: 64,
             right: 64,
+            zIndex: 6,
             display: "grid",
             gridTemplateColumns: `repeat(${activeScenes.length}, 1fr)`,
             gap: 12,
@@ -307,7 +421,7 @@ export const HeroShowreelComposition: React.FC<HeroShowreelProps> = ({
                     style={{
                       height: "100%",
                       width: `${fillRatio * 100}%`,
-                      backgroundColor: REMOTION_COLORS.orange,
+                      backgroundColor: accentColor,
                     }}
                   />
                 </div>

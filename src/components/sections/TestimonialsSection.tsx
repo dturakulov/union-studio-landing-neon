@@ -35,7 +35,7 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
   return (
     <section
       id="testimonials"
-      className="grain-surface bg-[#0a0a0a] py-14 text-white sm:py-24"
+      className="lut-transition grain-surface bg-[var(--bg-obsidian)] py-14 text-white sm:py-24"
     >
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
@@ -64,8 +64,8 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
                   isCenter ? "grid" : "hidden lg:grid"
                 } gap-5 rounded-2xl border p-5 transition duration-200 sm:grid-cols-[1.25fr_0.85fr] sm:p-6 ${
                   isCenter
-                    ? "border-[#ec521b] bg-[#ec521b] text-white shadow-[0_24px_60px_rgba(236,82,27,0.3)]"
-                    : "border-white/15 bg-[#141414] text-white/90"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)] shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+                    : "border-white/15 bg-[var(--surface-obsidian)] text-white/90"
                 }`}
               >
                 <div className="flex flex-col justify-between gap-5">
@@ -81,17 +81,21 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
                     <div>
                       <div
                         className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
-                          isCenter ? "text-white/85" : "text-[#ec521b]"
+                          isCenter ? "opacity-85" : "text-[var(--accent)]"
                         }`}
                       >
                         {item.roleTitle}
                       </div>
-                      <div className="mt-1 font-display-cine text-2xl text-white">
+                      <div
+                        className={`mt-1 font-display-cine text-2xl ${
+                          isCenter ? "text-[var(--accent-ink)]" : "text-white"
+                        }`}
+                      >
                         {item.author}
                       </div>
                       <div
                         className={`text-xs ${
-                          isCenter ? "text-white/85" : "text-[#b5b0a8]"
+                          isCenter ? "opacity-85" : "text-[#b5b0a8]"
                         }`}
                       >
                         {item.company}
@@ -117,7 +121,7 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
             type="button"
             onClick={prev}
             aria-label={content.testimonials.prevLabel}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-white transition duration-150 hover:border-[#ec521b] hover:bg-[#ec521b] cursor-pointer"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-white transition duration-150 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--accent-ink)] cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -128,7 +132,7 @@ export function TestimonialsSection({ content }: { content: LocaleContent }) {
             type="button"
             onClick={next}
             aria-label={content.testimonials.nextLabel}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-white transition duration-150 hover:border-[#ec521b] hover:bg-[#ec521b] cursor-pointer"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-white transition duration-150 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--accent-ink)] cursor-pointer"
           >
             <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </button>

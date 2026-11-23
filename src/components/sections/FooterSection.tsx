@@ -24,18 +24,18 @@ export function FooterSection({ content, onOpenBooking }: FooterSectionProps) {
   return (
     <footer
       id="contact"
-      className="grain-surface bg-[#0a0a0a] pt-14 text-white sm:pt-20"
+      className="lut-transition grain-surface bg-[var(--bg-obsidian)] pt-14 text-white sm:pt-20"
     >
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 sm:px-8">
         {/* Top 2-Column Split */}
         <div className="grid items-center gap-10 border-b border-dotted border-white/25 pb-16 lg:grid-cols-[1.25fr_0.85fr]">
           <div className="space-y-6">
-            <div className="font-display-cine text-2xl tracking-wider text-[#ec521b]">
+            <div className="font-display-cine text-2xl tracking-wider text-[var(--accent)]">
               {content.brand.name} · {content.brand.city}
             </div>
             <h2 className="font-display-cine text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.88] text-white">
               {content.footer.ctaPrefix}
-              <span className="font-serif-editorial font-semibold lowercase text-[#ec521b]">
+              <span className="font-serif-editorial font-semibold lowercase text-[var(--accent)]">
                 {content.footer.ctaItalic}
               </span>
               {content.footer.ctaSuffix}
@@ -47,16 +47,16 @@ export function FooterSection({ content, onOpenBooking }: FooterSectionProps) {
               <button
                 type="button"
                 onClick={onOpenBooking}
-                className="inline-flex items-center gap-2 rounded-full bg-[#ec521b] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white transition duration-150 hover:bg-[#d84310] active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-[var(--accent-ink)] transition duration-150 hover:bg-[var(--accent-hover)] active:scale-[0.98] cursor-pointer"
               >
                 {content.footer.ctaButton}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </button>
               <a
                 href={`tel:${STUDIO_CONTACTS.phone1.replace(/\s+/g, "")}`}
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3.5 text-xs font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:border-[#ec521b]"
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3.5 text-xs font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:border-[var(--accent)]"
               >
-                <Phone className="h-4 w-4 text-[#ec521b]" aria-hidden="true" />
+                <Phone className="h-4 w-4 text-[var(--accent)]" aria-hidden="true" />
                 {content.footer.phone1}
               </a>
             </div>

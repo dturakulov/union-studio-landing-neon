@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { ArrowUpRight, Camera, Phone, X } from "lucide-react";
 import { Lang, LocaleContent, STUDIO_CONTACTS } from "@/lib/i18n";
+import { LutId, STUDIO_LUTS } from "@/lib/lut";
 
 interface NavigationDrawerProps {
   open: boolean;
@@ -10,6 +11,8 @@ interface NavigationDrawerProps {
   content: LocaleContent;
   lang: Lang;
   onLangChange: (lang: Lang) => void;
+  lut: LutId;
+  onLutChange: (lut: LutId) => void;
   onOpenBooking: () => void;
 }
 
@@ -19,6 +22,8 @@ export function NavigationDrawer({
   content,
   lang,
   onLangChange,
+  lut,
+  onLutChange,
   onOpenBooking,
 }: NavigationDrawerProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -260,21 +265,52 @@ export function NavigationDrawer({
             </ul>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                {(["uz", "ru"] as const).map((code) => (
-                  <button
-                    key={code}
-                    type="button"
-                    onClick={() => onLangChange(code)}
-                    className={`rounded-full px-4 py-1.5 text-xs font-bold tracking-[0.14em] transition duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                      lang === code
-                        ? "bg-[#ec521b] text-white"
-                        : "border border-white/25 text-white/75 hover:border-white"
-                    }`}
-                  >
-                    {code.toUpperCase()}
-                  </button>
-                ))}
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  {(["uz", "ru"] as const).map((code) => (
+                    <button
+                      key={code}
+                      type="button"
+                      onClick={() => onLangChange(code)}
+                      className={`rounded-full px-4 py-1.5 text-xs font-bold tracking-[0.14em] transition duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                        lang === code
+                          ? "bg-[var(--accent)] text-[var(--accent-ink)]"
+                          : "border border-white/25 text-white/75 hover:border-white"
+                      }`}
+                    >
+                      {code.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+
+                <div
+                  className="flex items-center gap-1.5"
+                  role="group"
+                  aria-label="Studio LUT"
+                >
+                  {STUDIO_LUTS.map((preset) => {
+                    const selected = preset.id === lut;
+                    return (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => onLutChange(preset.id)}
+                        aria-pressed={selected}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] transition cursor-pointer ${
+                          selected
+                            ? "border-white bg-white/15 text-white"
+                            : "border-white/20 text-white/70 hover:border-white/45"
+                        }`}
+                      >
+                        <span
+                          className="h-2.5 w-2.5 rounded-full"
+                          style={{ backgroundColor: preset.swatch }}
+                        />
+                        {preset.label.split(" ")[0]}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <button
@@ -283,7 +319,7 @@ export function NavigationDrawer({
                   slideOutAndClose();
                   setTimeout(onOpenBooking, 220);
                 }}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-[#ec521b] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-white transition duration-150 hover:bg-[#d84310] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-[var(--accent-ink)] transition duration-150 hover:bg-[var(--accent-hover)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white cursor-pointer"
               >
                 {content.nav.bookBtn}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

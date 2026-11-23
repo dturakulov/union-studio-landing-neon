@@ -101,7 +101,7 @@ export function RemotionLightboxDialog({
     >
       <div className="flex items-start justify-between gap-3 border-b border-white/15 bg-[#0a0a0a] px-4 py-4 sm:items-center sm:px-6">
         <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#ec521b] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white sm:text-[11px]">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[var(--accent)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--accent-ink)] sm:text-[11px]">
             <Film className="h-3.5 w-3.5" aria-hidden="true" />
             {content.lightboxModal.badge}
           </span>
@@ -206,7 +206,7 @@ export function RemotionLightboxDialog({
                     : undefined,
                 );
               }}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#ec521b] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition duration-150 hover:bg-[#d84310] cursor-pointer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-[var(--accent-ink)] transition duration-150 hover:bg-[var(--accent-hover)] cursor-pointer"
             >
               {content.lightboxModal.bookThisBtn}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

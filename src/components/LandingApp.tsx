@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { CONTENT, InsightItem, Lang, WorkItem } from "@/lib/i18n";
+import { LutId } from "@/lib/lut";
 import { Navbar } from "@/components/sections/Navbar";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { BrandStrip } from "@/components/sections/BrandStrip";
@@ -23,6 +24,7 @@ import { InsightReaderDialog } from "@/components/modals/InsightReaderDialog";
 
 export function LandingApp() {
   const [lang, setLang] = useState<Lang>("uz");
+  const [lut, setLut] = useState<LutId>("editorial");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<
@@ -41,6 +43,10 @@ export function LandingApp() {
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
+
+  useEffect(() => {
+    document.documentElement.dataset.lut = lut;
+  }, [lut]);
 
   const handleCloseDrawer = useCallback(() => setDrawerOpen(false), []);
 
@@ -64,6 +70,9 @@ export function LandingApp() {
       <main>
         <HeroSection
           content={content}
+          lang={lang}
+          lut={lut}
+          onLutChange={setLut}
           onOpenBooking={() => openBooking()}
           onOpenShowreel={() => setLightboxTarget({ kind: "showreel" })}
         />
@@ -112,6 +121,8 @@ export function LandingApp() {
         content={content}
         lang={lang}
         onLangChange={setLang}
+        lut={lut}
+        onLutChange={setLut}
         onOpenBooking={() => openBooking()}
       />
 

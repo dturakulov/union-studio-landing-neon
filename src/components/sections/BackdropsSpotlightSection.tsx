@@ -31,7 +31,7 @@ export function BackdropsSpotlightSection({
   return (
     <section
       id="backdrops"
-      className="bg-[#fdf6e9] py-14 text-[#111111] sm:py-24"
+      className="lut-transition bg-[var(--bg-cream)] py-14 text-[#111111] sm:py-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -42,7 +42,7 @@ export function BackdropsSpotlightSection({
           </div>
           <h2 className="font-display-cine text-[clamp(2.4rem,5.8vw,5rem)] text-[#111111]">
             {content.backdrops.titlePrefix}
-            <span className="font-serif-editorial font-semibold lowercase text-[#ec521b]">
+            <span className="font-serif-editorial font-semibold lowercase text-[var(--accent)]">
               {content.backdrops.titleItalic}
             </span>
             {content.backdrops.titleSuffix}
@@ -52,8 +52,8 @@ export function BackdropsSpotlightSection({
           </p>
         </div>
 
-        {/* Centered Orange-Framed Spotlight */}
-        <div className="mx-auto mt-10 max-w-4xl rounded-3xl bg-[#ec521b] p-3 shadow-[0_24px_60px_rgba(236,82,27,0.22)] sm:mt-12 sm:p-5">
+        {/* Centered Spotlight Frame */}
+        <div className="mx-auto mt-10 max-w-4xl rounded-3xl bg-[var(--accent)] p-3 shadow-[0_24px_60px_rgba(0,0,0,0.2)] sm:mt-12 sm:p-5">
           <div className="overflow-hidden rounded-2xl bg-[#0a0a0a]">
             <RemotionCanvas
               component={BackdropsShowcaseComposition}
@@ -78,12 +78,12 @@ export function BackdropsSpotlightSection({
             />
           </div>
 
-          <div className="flex flex-col justify-between gap-4 px-2 pb-2 pt-4 text-white sm:flex-row sm:items-center">
+          <div className="flex flex-col justify-between gap-4 px-2 pb-2 pt-4 text-[var(--accent-ink)] sm:flex-row sm:items-center">
             <div>
-              <div className="font-display-cine text-3xl text-white">
+              <div className="font-display-cine text-3xl text-[var(--accent-ink)]">
                 {activeSet.number} · {activeSet.name}
               </div>
-              <p className="mt-1 max-w-xl text-sm text-white/90">
+              <p className="mt-1 max-w-xl text-sm opacity-90">
                 {activeSet.description}
               </p>
             </div>
@@ -118,8 +118,8 @@ export function BackdropsSpotlightSection({
                   aria-pressed={active}
                   className={`group w-[148px] shrink-0 snap-start rounded-2xl border p-3 text-left transition duration-150 lg:w-auto cursor-pointer ${
                     active
-                      ? "border-[#ec521b] bg-[#ec521b] text-white shadow-md"
-                      : "border-black/15 bg-[#f4ead6] text-[#111111] hover:border-[#ec521b]"
+                      ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)] shadow-md"
+                      : "border-black/15 bg-[var(--surface-cream)] text-[#111111] hover:border-[var(--accent)]"
                   }`}
                 >
                   <div className="mb-2 flex items-center justify-between font-mono text-xs font-bold">
@@ -142,7 +142,7 @@ export function BackdropsSpotlightSection({
                   </div>
                   <div
                     className={`mt-1 text-[11px] ${
-                      active ? "text-white/85" : "text-[#4a4a4a]"
+                      active ? "opacity-85" : "text-[#4a4a4a]"
                     }`}
                   >
                     {setItem.category}
@@ -172,9 +172,9 @@ export function BackdropsSpotlightSection({
           </button>
 
           {showFullCatalog && (
-            <div className="mt-8 w-full rounded-3xl border border-black/20 bg-[#f4ead6] p-5 sm:p-8">
+            <div className="mt-8 w-full rounded-3xl border border-black/20 bg-[var(--surface-cream)] p-5 sm:p-8">
               <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-black/15 pb-4">
-                <span className="rounded-full bg-[#ec521b] px-4 py-1 text-xs font-bold uppercase tracking-[0.12em] text-white">
+                <span className="rounded-full bg-[var(--accent)] px-4 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[var(--accent-ink)]">
                   {content.backdrops.allCountBadge}
                 </span>
                 <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#4a4a4a]">
@@ -190,7 +190,7 @@ export function BackdropsSpotlightSection({
                   className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-bold uppercase tracking-[0.08em] transition cursor-pointer ${
                     activeCategory === "all"
                       ? "bg-[#111111] text-white"
-                      : "border border-black/20 bg-white text-[#111111] hover:border-[#ec521b]"
+                      : "border border-black/20 bg-white text-[#111111] hover:border-[var(--accent)]"
                   }`}
                 >
                   {content.backdrops.allFilterLabel}
@@ -203,8 +203,8 @@ export function BackdropsSpotlightSection({
                     aria-pressed={activeCategory === group.id}
                     className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-bold transition cursor-pointer ${
                       activeCategory === group.id
-                        ? "bg-[#ec521b] text-white"
-                        : "border border-black/20 bg-white text-[#111111] hover:border-[#ec521b]"
+                        ? "bg-[var(--accent)] text-[var(--accent-ink)]"
+                        : "border border-black/20 bg-white text-[#111111] hover:border-[var(--accent)]"
                     }`}
                   >
                     {group.label} ({group.count})
@@ -216,13 +216,13 @@ export function BackdropsSpotlightSection({
                 {filteredCategories.map((group) => (
                   <div
                     key={group.id}
-                    className="rounded-2xl border border-black/15 bg-[#fdf6e9] p-5"
+                    className="rounded-2xl border border-black/15 bg-[var(--bg-cream)] p-5"
                   >
                     <div className="flex items-baseline justify-between gap-2 border-b border-black/10 pb-3">
                       <h3 className="font-display-cine text-2xl text-[#111111]">
                         {group.label}
                       </h3>
-                      <span className="font-mono text-xs font-bold text-[#ec521b]">
+                      <span className="font-mono text-xs font-bold text-[var(--accent)]">
                         {group.count}×
                       </span>
                     </div>
@@ -232,7 +232,7 @@ export function BackdropsSpotlightSection({
                           <button
                             type="button"
                             onClick={() => onBookBackdrop(setName)}
-                            className="rounded-full border border-black/15 bg-white px-3 py-1.5 text-xs font-medium text-[#111111] transition hover:border-[#ec521b] hover:text-[#ec521b] cursor-pointer"
+                            className="rounded-full border border-black/15 bg-white px-3 py-1.5 text-xs font-medium text-[#111111] transition hover:border-[var(--accent)] hover:text-[var(--accent)] cursor-pointer"
                           >
                             {setName}
                           </button>

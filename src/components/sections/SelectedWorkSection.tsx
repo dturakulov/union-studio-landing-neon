@@ -22,7 +22,7 @@ export function SelectedWorkSection({
   return (
     <section
       id="work"
-      className="bg-[#fdf6e9] py-14 text-[#111111] sm:py-24"
+      className="lut-transition bg-[var(--bg-cream)] py-14 text-[#111111] sm:py-24"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
         {/* Centered Header with Tilted Orange Pill */}
@@ -82,7 +82,7 @@ export function SelectedWorkSection({
             )}
 
             {/* Narrative Block + Rotating Pink Stamp */}
-            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-black/15 bg-[#f4ead6] p-6 sm:flex-row sm:items-center sm:p-8">
+            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-black/15 bg-[var(--surface-cream)] p-6 sm:flex-row sm:items-center sm:p-8">
               <div className="max-w-sm space-y-2">
                 <h3 className="font-display-cine text-3xl text-[#111111]">
                   {content.work.narrativeHeading}
@@ -96,7 +96,7 @@ export function SelectedWorkSection({
                 type="button"
                 onClick={onOpenBooking}
                 aria-label={content.nav.bookBtn}
-                className="group relative flex h-32 w-32 shrink-0 items-center justify-center rounded-full bg-[#f6b8d0] text-[#111111] transition duration-200 hover:scale-105 hover:bg-[#ec521b] hover:text-white cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#111111]"
+                className="group relative flex h-32 w-32 shrink-0 items-center justify-center rounded-full bg-[var(--sticker-pink)] text-[#111111] transition duration-200 hover:scale-105 hover:bg-[var(--accent)] hover:text-[var(--accent-ink)] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#111111]"
               >
                 <svg
                   viewBox="0 0 140 140"
@@ -187,7 +187,7 @@ function WorkPosterCard({
           onClick={onSelect}
           className="absolute inset-0 z-20 flex items-end justify-between bg-gradient-to-t from-black/75 via-transparent to-transparent p-4 text-left opacity-100 transition duration-200 sm:p-5 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100 cursor-pointer"
         >
-          <span className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-[#ec521b] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-white shadow-lg">
+          <span className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-[var(--accent)] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[var(--accent-ink)] shadow-lg">
             <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
             {watchLabel}
           </span>
@@ -196,7 +196,9 @@ function WorkPosterCard({
         {sticker && (
           <div
             className={`pointer-events-none absolute right-3 top-14 z-20 flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#111111] p-2 text-center text-[9px] font-extrabold uppercase leading-tight tracking-wider text-[#111111] shadow-md -rotate-6 sm:right-4 sm:top-16 sm:h-24 sm:w-24 sm:text-[10px] ${
-              sticker.tone === "sky" ? "bg-[#7ecbf2]" : "bg-[#f2b749]"
+              sticker.tone === "sky"
+                ? "bg-[var(--sticker-sky)]"
+                : "bg-[var(--sticker-gold)]"
             }`}
           >
             {sticker.text}
